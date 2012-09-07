@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require 'cryo'
+
+class CryoCLI < Thor
+  include Thor::Actions
+
+  map "--version" => :version, "-v" => :version
+  desc "version", "Report the current version of Cryo"
+  def version
+    say "cryo #{Cryo::VERSION}"
+  end
+
+end
+
+CryoCLI.start
