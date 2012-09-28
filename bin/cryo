@@ -1,15 +1,139 @@
 #!/usr/bin/env ruby
-require 'cryo'
 
-class CryoCLI < Thor
-  include Thor::Actions
+require_relative "../lib/cryo"
+require 'trollop'
 
-  map "--version" => :version, "-v" => :version
-  desc "version", "Report the current version of Cryo"
-  def version
-    say "cryo #{Cryo::VERSION}"
+required_parameters = ["archive_bucket",
+                       "archive_frequency",
+                       "aws_access_key",
+                       "aws_secret_key",
+                       "host",
+                       "password",
+                       "snapshot_bucket",
+                       "snapshot_frequency",
+                       "snapshot_period",
+                       "snapshot_prefix",
+                       "sns_topic",
+                       "user",
+                      ]
+
+mode = ARGV[0]
+
+options = Trollop::options do 
+  version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
+  banner <<-END_OF_BANNER
+
+#{version}
+
+Welcome to Cryo, a simple backup utility
+
+All options can be passed in with either the given command line options, or passed in via
+environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO_HOST instead of --host
+
+More docs and examples can be found at https://github.com/airbnb/cryo
+
+Usage: 
+      cryo [redis,mysql,postgres] [options]
+
+where [options] are:
+
+END_OF_BANNER
+
+  opt(:snapshot_frequency,
+      "how often to take backups (in mins)",
+      :type => Integer,
+      :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
+  
+  opt(:archive_frequency,
+      "maxium time in between archives (in mins)",
+      :type => Integer,
+      :default => ENV['CRYO_ARCHIVE_FREQUENCY'].to_i)
+
+  opt(:snapshot_period,
+      "time before snapshots get deleted or archived (in mins)",
+      :type => Integer, 
+      :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
+
+  opt(:snapshot_bucket,
+      "s3 bucket to use for snapshots",
+      :type => String,
+      :default => ENV['CRYO_SNAPSHOT_BUCKET'])
+
+  opt(:snapshot_prefix,
+      "s3 object prefix to use for snapshots",
+      :type => String,
+      :default => ENV['CRYO_SNAPSHOT_PREFIX'])
+
+  opt(:archive_bucket,
+      "s3 bucket to use for archives",
+      :type => String,
+      :default => ENV['CRYO_ARCHIVE_BUCKET'])
+
+  opt(:archive_prefix,
+      "s3 object prefix to use for archives",
+      :type => String,
+      :default => ENV['CRYO_ARCHIVE_PREFIX'])
+
+  opt(:sns_topic,
+      "sns topic",
+      :type => String,
+      :default => ENV['CRYO_SNS_TOPIC'])
+
+  opt(:aws_access_key,
+      "aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable",
+      :type => String,
+      :default => ENV['CRYO_AWS_ACCESS_KEY'])
+
+  opt(:aws_secret_key,
+      "aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable",
+      :type => String,
+      :default => ENV['CRYO_AWS_SECRET_KEY'])
+
+  opt(:host,
+      "remote host. Can be set using the CRYO_HOST environment variable",
+      :type => String,
+      :default => ENV['CRYO_HOST'])
+
+  opt(:user,
+      "remote user",
+      :type => String,
+      :default => ENV['CRYO_USER'])
+
+  opt(:password,
+      "remote password",
+      :type => String,
+      :default => ENV['CRYO_PASSWORD'])
+
+
+  case mode 
+  when 'mysql'
+  when 'redis'
+    opt(:path,
+        "path to redis database file",
+        :type => String,
+        :default => ENV['CRYO_PATH'])
+    required_parameters << 'path'
+  when 'postgres'
+  else
+    unless mode == '--help'
+      STDERR.puts "ERROR! bad input. first option needs to be one of [redis, postgres, mysql]"
+      STDERR.puts "Please use --help for more info"
+      exit 1 
+    end
   end
-
 end
 
-CryoCLI.start
+options.merge!(type: mode)
+
+
+required_parameters.each do |arg|
+  Trollop::die arg.to_sym, "needs to specified on the commandline or set by the CRYO_#{arg.upcase} environment variable" \
+    if options[arg.to_sym].nil? or ! options[arg.to_sym]
+end
+
+
+run = Cryo.new(options)
+run.backup!
+run.archive_and_purge
+# run.list_snapshots
+# run.list_archives
