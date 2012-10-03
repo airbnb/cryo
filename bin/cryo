@@ -14,6 +14,7 @@ required_parameters = ["archive_bucket",
                        "snapshot_period",
                        "snapshot_prefix",
                        "sns_topic",
+                       "tmp_path",
                        "user",
                       ]
 
@@ -39,6 +40,11 @@ where [options] are:
 
 END_OF_BANNER
 
+  opt(:tmp_path,
+      "where should temp files be created",
+      :type => String,
+      :default => ENV['CRYO_TMP_PATH'])
+  
   opt(:snapshot_frequency,
       "how often to take backups (in mins)",
       :type => Integer,

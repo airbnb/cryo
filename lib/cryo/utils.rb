@@ -2,6 +2,7 @@ module Utils
 
   require 'zlib'
   require 'net/ntp'
+  require 'fileutils'
     
 
   def delete_file(path)
@@ -11,8 +12,9 @@ module Utils
 
   def get_tempfile
     #    Tempfile.new('redis-backup','/mnt/cryo').path
-    tmp_file = "/tmp/tmp-#{rand 9999}"
+    tmp_file = File.join(@tmp_path,"tmp-#{rand 9999}")
     at_exit {delete_file tmp_file}
+    FileUtils.touch tmp_file
     tmp_file
   end
 
@@ -54,17 +56,32 @@ module Utils
 
   def safe_run(command)
     #logger.debug "about to run #{command}"
-    output = `#{command}`.chomp
+    output = `bash -c "#{command}"`.chomp
     raise "command '#{command}' failed!\nOutput was:\n#{output}" unless $?.success?
     true
   end
 
   def verify_system_dependency(command)
-    raise "system dependency #{command} is not unstalled" unless system "which #{command}"
+    raise "system dependency #{command} is not unstalled" unless system "which #{command} > /dev/null"
+  end
+
+  def get_utc_time
+    retries = 5
+    begin
+      Net::NTP.get("us.pool.ntp.org").time.getutc
+    rescue Object => o
+      retries -= 1
+      if retries > 0
+        logger.debug "retrying ntp query again..."
+        sleep 2
+        retry
+      end
+      throw o
+    end
   end
 
   def get_utc_timestamp()
-    @time ||= Net::NTP.get("us.pool.ntp.org").time.getutc  # don't change the endpoint!!! 
+    @time ||= get_utc_time  # don't change the endpoint!!! 
     @timestamp ||= @time.strftime("%Y/%m/%d/%H:%M:%S")
   end
 

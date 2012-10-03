@@ -112,7 +112,7 @@ class S3 < Store
   end
   
 
-  # this function returns the last item in a bucket
+  # this function returns the last item in a bucket that matches the given prefix
   def get_newest_archive(prefix=@archive_prefix)
     tree = @archive_bucket.objects.with_prefix(prefix).as_tree
     directories = tree.children.select(&:branch?).collect(&:prefix)

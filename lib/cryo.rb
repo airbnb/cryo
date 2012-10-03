@@ -34,25 +34,32 @@ class Cryo
     @snapshot_period = options[:snapshot_period]
     @snapshot_bucket = options[:snapshot_bucket]
     @archive_bucket = options[:archive_bucket]
+    @tmp_path = options[:tmp_path]
   end
 
 
   def backup!()
-    logger.info "taking backup..."
-    backup_file = @database.get_backup
+    if @database.respond_to? 'get_gzipped_backup'
+      logger.info "getting compressed backup"
+      compressed_backup = @database.get_gzipped_backup
+    else
+      logger.info "taking backup..."
+      backup_file = @database.get_backup
 
-    logger.info "compressing backup..."
-    compressed_backup = gzip_file backup_file
+      logger.info "compressing backup..."
+      compressed_backup = gzip_file backup_file
+    end
 
     logger.info "storing backup..."
     @store.put(content: Pathname.new(compressed_backup), bucket: options[:snapshot_bucket],key: @key)
 
-    logger.info "completed backup:)"
+    logger.info "completed backup in #{(get_utc_time - @time).round 2} seconds :)"
   end
 
   def archive_and_purge()
     logger.info "archiving and purging..."
     @store.archive_and_purge()
+    logger.info "done archiving and purging :)"
   end
 
   def list_snapshots
