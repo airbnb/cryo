@@ -23,7 +23,8 @@ class Cryo
     self.logger = Logger.new(STDERR)
     logger.level = Logger::DEBUG
 
-    @database = Database.create(options)
+    @database = Database.create(options) \
+      unless options[:type] == 'list' or options[:type] == 'get'
     @store = Store.create(options.merge(type: 's3',time: @time))
     @message = Message.create(options.merge(type: 'sns'))
     @snapshot_prefix = options[:snapshot_prefix]
@@ -72,6 +73,12 @@ class Cryo
     archive_list = @store.get_bucket_listing(bucket: @archive_bucket, prefix: @archive_prefix)
     puts "here is what I see in the archive bucket:"
     archive_list.each { |i| puts "  #{i.key}"}
+  end
+
+  def get_snapshot(snapshot)
+    basename = File.basename snapshot
+    puts "getting #{snapshot} and saving it in #{File.join(Dir.pwd,basename)}"
+    @store.get(bucket: @snapshot_bucket,key: snapshot,file: basename)
   end
 
 end

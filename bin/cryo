@@ -18,7 +18,7 @@ required_parameters = ["archive_bucket",
                        "user",
                       ]
 
-mode = ARGV[0]
+mode = ARGV.shift
 
 options = Trollop::options do 
   version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
@@ -34,7 +34,7 @@ environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO
 More docs and examples can be found at https://github.com/airbnb/cryo
 
 Usage: 
-      cryo [redis,mysql,postgres] [options]
+      cryo [redis,mysql,postgres,list,get] [options]
 
 where [options] are:
 
@@ -120,9 +120,11 @@ END_OF_BANNER
         :default => ENV['CRYO_PATH'])
     required_parameters << 'path'
   when 'postgres'
+  when 'list'
+  when 'get'
   else
     unless mode == '--help'
-      STDERR.puts "ERROR! bad input. first option needs to be one of [redis, postgres, mysql]"
+      STDERR.puts "ERROR! bad input. first option needs to be one of [redis, postgres, mysql, list, get]"
       STDERR.puts "Please use --help for more info"
       exit 1 
     end
@@ -135,11 +137,22 @@ options.merge!(type: mode)
 required_parameters.each do |arg|
   Trollop::die arg.to_sym, "needs to specified on the commandline or set by the CRYO_#{arg.upcase} environment variable" \
     if options[arg.to_sym].nil? or ! options[arg.to_sym]
-end
+end unless mode == 'get'
 
 
 run = Cryo.new(options)
-run.backup!
-run.archive_and_purge
-# run.list_snapshots
+
+case mode 
+when 'list'
+  run.list_snapshots
+when 'get'
+  snapshot = ARGV.shift
+  raise "you did not specify a snapshot!" if snapshot.nil?
+  run.get_snapshot(snapshot)
+else
+  run.backup!
+  run.archive_and_purge
+end
+
+# 
 # run.list_archives
