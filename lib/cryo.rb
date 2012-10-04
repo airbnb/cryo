@@ -43,18 +43,24 @@ class Cryo
     if @database.respond_to? 'get_gzipped_backup'
       logger.info "getting compressed backup"
       compressed_backup = @database.get_gzipped_backup
+      logger.info "got backup in #{(get_utc_time - @time).round 2} seconds"
     else
       logger.info "taking backup..."
       backup_file = @database.get_backup
+      logger.info "got backup in #{(get_utc_time - @time).round 2} seconds"
 
+      timer = get_utc_time
       logger.info "compressing backup..."
       compressed_backup = gzip_file backup_file
+      logger.info "compressed backup in #{(get_utc_time - timer).round 2} seconds"
     end
 
+    timer = get_utc_time
     logger.info "storing backup..."
     @store.put(content: Pathname.new(compressed_backup), bucket: options[:snapshot_bucket],key: @key)
+    logger.info "upload took #{(get_utc_time - timer).round 2} seconds"
 
-    logger.info "completed backup in #{(get_utc_time - @time).round 2} seconds :)"
+    logger.info "completed entire backup in #{(get_utc_time - @time).round 2} seconds :)"
   end
 
   def archive_and_purge()
