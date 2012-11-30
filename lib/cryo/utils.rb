@@ -56,7 +56,7 @@ module Utils
 
   def safe_run(command)
     #logger.debug "about to run #{command}"
-    output = `bash -c "#{command}"`.chomp
+    output = `bash -c "set -o pipefail && #{command}"`.chomp
     raise "command '#{command}' failed!\nOutput was:\n#{output}" unless $?.success?
     true
   end
