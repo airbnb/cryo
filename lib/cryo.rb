@@ -10,18 +10,18 @@ Dir.glob(File.join(File.dirname(__FILE__),'**/*.rb')).sort.each do |file|
 end
 
 
-class Cryo 
+class Cryo
 
   include Utils
 #  HOST = `hostname`.chomp!
   attr_accessor :options, :s3, :md5, :sns, :logger, :key
 
   def initialize(options={})
-    get_utc_timestamp # save start time for backup
-
     self.options = options
     self.logger = Logger.new(STDERR)
     logger.level = Logger::DEBUG
+
+    get_utc_timestamp # save start time for backup
 
     @database = Database.create(options) \
       unless options[:type] == 'list' or options[:type] == 'get'
