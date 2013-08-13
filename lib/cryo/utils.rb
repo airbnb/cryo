@@ -26,7 +26,7 @@ module Utils
     
     # stream the gzipped file into an uncompressed file
     Zlib::GzipReader.open(path) do |gz|
-      File.open(tempfile,'w') do |open_file|
+      File.open(tempfile, 'w') do |open_file|
         # write 1M chunks at a time
         open_file.write gz.read(1024*1024) until gz.eof?
       end
@@ -62,17 +62,17 @@ module Utils
   end
 
   def verify_system_dependency(command)
-    raise "system dependency #{command} is not unstalled" unless system "which #{command} > /dev/null"
+    raise "system dependency #{command} is not installed" unless system "which #{command} > /dev/null"
   end
 
   def get_utc_time
     retries = 5
     begin
-      Net::NTP.get("us.pool.ntp.org").time.getutc
+      Net::NTP.get(ENV['NTP_HOST'] || 'us.pool.ntp.org').time.getutc
     rescue Object => o
       retries -= 1
       if retries > 0
-        logger.debug "retrying ntp query again..."
+        logger.debug 'retrying ntp query again...'
         sleep 2
         retry
       end
@@ -80,12 +80,12 @@ module Utils
     end
   end
 
-  def get_utc_timestamp()
+  def get_utc_timestamp
     @time ||= get_utc_time  # don't change the endpoint!!! 
-    @timestamp ||= @time.strftime("%Y/%m/%d/%H:%M:%S")
+    @timestamp ||= @time.strftime('%Y/%m/%d/%H:%M:%S')
   end
 
-  def get_timstamped_key_name()
+  def get_timstamped_key_name
     "#{@snapshot_prefix}#{@timestamp}Z.cryo"
   end
 
@@ -100,18 +100,18 @@ module Utils
   def get_age_from_key_name(key_name)
     snapshot_time = get_utc_time_from_key_name(key_name)
     age_in_mins_as_float = (@time - snapshot_time) / 60
-    age_in_mins_as_int = age_in_mins_as_float.to_i
+    age_in_mins_as_float.to_i
   end
 
   # find out if we have an archive that is more recent than the snapshot period
   def need_to_archive?(old_snapshot_age,new_archive_age)
-    logger.debug "checking to see if we should archive"
+    logger.debug 'checking to see if we should archive'
     logger.debug "oldest snapshot age is #{old_snapshot_age}"
     logger.debug "newest archive time is #{new_archive_age}"
     logger.debug "@snapshot_period is #{@archive_frequency}"
     answer = (new_archive_age - old_snapshot_age) > @archive_frequency
     logger.debug "returning #{answer.inspect}"
-    return answer
-  end
 
+    answer
+  end
 end

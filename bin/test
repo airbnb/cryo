@@ -1,72 +1,67 @@
 options = Trollop::options do 
 
   opt(:snapshot_frequency,
-      "how often to take backups (in mins)",
+      'how often to take backups (in mins)',
       :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i || nil,
       :required => true)
   
   opt(:archive_frequency,
-      "maxium time in between archives (in mins)",
+      'maximum time in between archives (in mins)',
       :type => Integer,
       :default => ENV['CRYO_ARCHIVE_FREQUENCY'].to_i || nil,
       :required => true)
 
   opt(:snapshot_period,
-      "time before snapshots get deleted or archived (in mins)",
+      'time before snapshots get deleted or archived (in mins)',
       :type => Integer, 
       :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i || nil,
       :required => true)
 
   opt(:snapshot_bucket,
-      "s3 bucket to use for snapshots",
+      's3 bucket to use for snapshots',
       :type => String,
       :default => ENV['CRYO_SNAPSHOT_BUCKET'] || nil,
       :required => true)
 
   opt(:snapshot_prefix,
-      "s3 object prefix to use for snapshots",
+      's3 object prefix to use for snapshots',
       :type => String,
       :default => ENV['CRYO_SNAPSHOT_PREFIX'] || nil,
       :required => true)
 
   opt(:archive_bucket,
-      "s3 bucket to use for archives",
+      's3 bucket to use for archives',
       :type => String,
       :default => ENV['CRYO_ARCHIVE_BUCKET'] || nil,
       :required => true)
 
   opt(:archive_prefix,
-      "s3 object prefix to use for archives",
+      's3 object prefix to use for archives',
       :type => String,
       :default => ENV['CRYO_ARCHIVE_PREFIX'] || nil,
       :required => true)
 
   opt(:sns_topic,
-      "sns topic",
+      'sns topic',
       :type => String,
       :default => ENV['CRYO_SNS_TOPIC'] || nil,
       :required => true)
 
-
-
-
-
-
   opt(:host,
-      "remote host. Can be set using the CRYO_HOST environment variable",
+      'remote host. Can be set using the CRYO_HOST environment variable',
       :type => String,
       :default => ENV['CRYO_HOST'] || nil,
       :required => true)
 
   opt(:user,
-      "remote user",
+      'remote user',
       :type => String,
       :default => ENV['CRYO_USER'] || nil,
       :required => true)
 
   opt(:password,
-      "remote password",
+      'remote password',
       :type => String,
       :default => ENV['CRYO_PASSWORD'] || nil,
       :required => true)
@@ -76,15 +71,15 @@ options = Trollop::options do
   when 'mysql'
   when 'redis'
     opt(:path,
-        "path to redis database file",
+        'path to redis database file',
         :type => String,
         :default => ENV['CRYO_PATH'])
     required_parameters << 'path'
   when 'postgres'
   else
     unless mode == '--help'
-      STDERR.puts "ERROR! bad input. first option needs to be one of [redis, postgres, mysql]"
-      STDERR.puts "Please use --help for more info"
+      STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql]'
+      STDERR.puts 'Please use --help for more info'
       exit 1 
     end
   end
@@ -94,7 +89,7 @@ options.merge!(type: mode)
 
 
 
-  puts "optionss are:"
+  puts 'options are:'
   require 'pp'
   pp options
 

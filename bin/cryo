@@ -1,22 +1,21 @@
 #!/usr/bin/env ruby
 
-require_relative "../lib/cryo"
+require_relative '../lib/cryo'
 require 'trollop'
 
-required_parameters = ["archive_bucket",
-                       "archive_frequency",
-                       "aws_access_key",
-                       "aws_secret_key",
-                       "host",
-                       "password",
-                       "snapshot_bucket",
-                       "snapshot_frequency",
-                       "snapshot_period",
-                       "snapshot_prefix",
-                       "sns_topic",
-                       "tmp_path",
-                       "user",
-                      ]
+required_parameters = %w(archive_bucket
+                         archive_frequency
+                         aws_access_key
+                         aws_secret_key
+                         host
+                         password
+                         snapshot_bucket
+                         snapshot_frequency
+                         snapshot_period
+                         snapshot_prefix
+                         sns_topic
+                         tmp_path
+                         user)
 
 mode = ARGV.shift
 
@@ -41,72 +40,72 @@ where [options] are:
 END_OF_BANNER
 
   opt(:tmp_path,
-      "where should temp files be created",
+      'where should temp files be created',
       :type => String,
       :default => ENV['CRYO_TMP_PATH'])
   
   opt(:snapshot_frequency,
-      "how often to take backups (in mins)",
+      'how often to take backups (in mins)',
       :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
   
   opt(:archive_frequency,
-      "maxium time in between archives (in mins)",
+      'maximum time in between archives (in mins)',
       :type => Integer,
       :default => ENV['CRYO_ARCHIVE_FREQUENCY'].to_i)
 
   opt(:snapshot_period,
-      "time before snapshots get deleted or archived (in mins)",
+      'time before snapshots get deleted or archived (in mins)',
       :type => Integer, 
       :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
 
   opt(:snapshot_bucket,
-      "s3 bucket to use for snapshots",
+      's3 bucket to use for snapshots',
       :type => String,
       :default => ENV['CRYO_SNAPSHOT_BUCKET'])
 
   opt(:snapshot_prefix,
-      "s3 object prefix to use for snapshots",
+      's3 object prefix to use for snapshots',
       :type => String,
       :default => ENV['CRYO_SNAPSHOT_PREFIX'])
 
   opt(:archive_bucket,
-      "s3 bucket to use for archives",
+      's3 bucket to use for archives',
       :type => String,
       :default => ENV['CRYO_ARCHIVE_BUCKET'])
 
   opt(:archive_prefix,
-      "s3 object prefix to use for archives",
+      's3 object prefix to use for archives',
       :type => String,
       :default => ENV['CRYO_ARCHIVE_PREFIX'])
 
   opt(:sns_topic,
-      "sns topic",
+      'sns topic',
       :type => String,
       :default => ENV['CRYO_SNS_TOPIC'])
 
   opt(:aws_access_key,
-      "aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable",
+      'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
       :type => String,
       :default => ENV['CRYO_AWS_ACCESS_KEY'])
 
   opt(:aws_secret_key,
-      "aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable",
+      'aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable',
       :type => String,
       :default => ENV['CRYO_AWS_SECRET_KEY'])
 
   opt(:host,
-      "remote host. Can be set using the CRYO_HOST environment variable",
+      'remote host. Can be set using the CRYO_HOST environment variable',
       :type => String,
       :default => ENV['CRYO_HOST'])
 
   opt(:user,
-      "remote user",
+      'remote user',
       :type => String,
       :default => ENV['CRYO_USER'])
 
   opt(:password,
-      "remote password",
+      'remote password',
       :type => String,
       :default => ENV['CRYO_PASSWORD'])
 
@@ -115,7 +114,7 @@ END_OF_BANNER
   when 'mysql'
   when 'redis'
     opt(:path,
-        "path to redis database file",
+        'path to redis database file',
         :type => String,
         :default => ENV['CRYO_PATH'])
     required_parameters << 'path'
@@ -124,8 +123,8 @@ END_OF_BANNER
   when 'get'
   else
     unless mode == '--help'
-      STDERR.puts "ERROR! bad input. first option needs to be one of [redis, postgres, mysql, list, get]"
-      STDERR.puts "Please use --help for more info"
+      STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql, list, get]'
+      STDERR.puts 'Please use --help for more info'
       exit 1 
     end
   end
@@ -147,7 +146,7 @@ when 'list'
   run.list_snapshots
 when 'get'
   snapshot = ARGV.shift
-  raise "you did not specify a snapshot!" if snapshot.nil?
+  raise 'you did not specify a snapshot!' if snapshot.nil?
   run.get_snapshot(snapshot)
 else
   run.backup!

@@ -1,14 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'trollop'
-require_relative "../lib/cryo"
+require_relative '../lib/cryo'
 
 
-@required_inputs = [
-                    'aws_access_key',
-                    'aws_seceret_key',
-                   ]
-
+@required_inputs = %w(aws_access_key aws_secret_key)
 
 @options={}
 
@@ -47,16 +43,16 @@ def print_message_and_exit(message='')
 end
 
 def parse_inputs
-  log "starting to parse command line inputs"
-  while next_argument = ARGV.shift
+  log 'starting to parse command line inputs'
+  while (next_argument = ARGV.shift)
     log "looping inside parse_inputs. next arg is #{next_argument}"
     print_help_and_exit unless next_argument.start_with? '--'
     formatted_key = next_argument.gsub(/^--/,'').gsub(/-/,'_').to_sym
     if !ARGV.empty? and !ARGV.first.start_with? '--'
-      log "this option has a param"
+      log 'this option has a param'
       param = ARGV.shift
     else
-      log "this arg does not have a param"
+      log 'this arg does not have a param'
       param = true
     end
     @options.merge!({formatted_key => param})
@@ -67,12 +63,12 @@ def verify_environment_variable(variable='')
   log "checking for environment variable #{variable}"
   formatted_variable_name = "CRYO_#{variable.upcase}"
   value = ENV[formatted_variable_name]
-  unless value.nil?
-    log "looks like the variable exists"
-    @options.merge!({variable.to_sym => value})
+  if value.nil?
+    log 'looks like the variable does not exist'
+    print_message_and_exit "\nyou need to make sure that you set the #{formatted_variable_name} variable!"
   else
-    log "looks like the variable does not exist"
-    print_message_and_exit "\nyou need to make sure that you set the #{formatted_variable_name} variable!!!"
+    log 'looks like the variable exists'
+    @options.merge!({variable.to_sym => value})
   end
 end
 
@@ -86,9 +82,9 @@ end
 def backup
   %w{host}.each {|i| @required_inputs << i}
   case @noun
-  when "mysql"
-  when "redis"
-  when "postgres"
+  when 'mysql'
+  when 'redis'
+  when 'postgres'
   else
     print_help_and_exit
   end
@@ -97,8 +93,8 @@ end
 
 def list
   case @noun
-  when "snapshots"
-  when "archives"
+  when 'snapshots'
+  when 'archives'
   else
     print_help_and_exit
   end
@@ -107,26 +103,26 @@ end
 
 def get
   case @noun
-  when "archives"
-  when "snapshots"
+  when 'archives'
+  when 'snapshots'
   else
     print_help_and_exit
   end
 end
 
 
-log "starting to parse arguments"
+log 'starting to parse arguments'
 print_help_and_exit if ARGV.size < 2
 @verb = ARGV.shift
 @noun = ARGV.shift
 log "got a noun and a verb. #{@verb} and #{@noun}"
 
 case @verb
-when "backup"
+when 'backup'
   backup
-when "list"
+when 'list'
   list
-when "get"
+when 'get'
   get
 else
   print_help_and_exit
@@ -144,13 +140,13 @@ Kernel.exit 2
 
 SUB_COMMANDS = %w(backup list get)
 global_opts = Trollop::options do
-  STDERR.puts "entering global options"
+  STDERR.puts 'entering global options'
   stop_on_unknown
   version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
 
   
   opt(:aws_access_key,
-      "aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable",
+      'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
       :type => String,
       :default => ENV['CRYO_AWS_ACCESS_KEY'] || nil,
       :required => true)
@@ -164,43 +160,42 @@ end
 cmd = ARGV.shift # get the subcommand
 cmd_opts = \
 case cmd
-when "backup" # parse delete options
+when 'backup' # parse delete options
   Trollop::options do
     stop_on_unknown
-    stop_on ["aws_access_key"]
-    STDERR.puts "entering backup options"
-    opt :force, "Force deletion"
+    stop_on %w(aws_access_key)
+    STDERR.puts 'entering backup options'
+    opt :force, 'Force deletion'
   end
-when "list"  # parse copy options
+when 'list' # parse copy options
   Trollop::options do
-    STDERR.puts "entering list options"
-    opt :double, "Copy twice for safety's sake"
+    STDERR.puts 'entering list options'
+    opt :double, 'Copy twice for safety\'s sake'
   end
-when "get"  # parse copy options
+when 'get' # parse copy options
   Trollop::options do
-    STDERR.puts "entering get options"
-    opt :double, "Copy twice for safety's sake"
+    STDERR.puts 'entering get options'
+    opt :double, 'Copy twice for safety\'s sake'
   end
 when nil
-  STDERR.puts "entering nil options"
-  puts "please call with --help if you need help"
+  STDERR.puts 'entering nil options'
+  puts 'please call with --help if you need help'
   Kernel.exit 1
 else
-  STDERR.puts "entering else options"
+  STDERR.puts 'entering else options'
   Trollop::die "unknown subcommand #{cmd.inspect}"
 end
 
 always_required_options = Trollop::options do 
-  STDERR.puts "entering always required options"
+  STDERR.puts 'entering always required options'
   stop_on_unknown
 
 
   opt(:aws_secret_key,
-      "aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable",
+      'aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable',
       :type => String,
       :default => ENV['CRYO_AWS_SECRET_KEY'] || nil,
       :required => true)
-
 end
 
 
