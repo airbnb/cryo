@@ -7,7 +7,7 @@ options = Trollop::options do
       :required => true)
   
   opt(:archive_frequency,
-      "maxium time in between archives (in mins)",
+      "maximum time in between archives (in mins)",
       :type => Integer,
       :default => ENV['CRYO_ARCHIVE_FREQUENCY'].to_i || nil,
       :required => true)
@@ -94,7 +94,7 @@ options.merge!(type: mode)
 
 
 
-  puts "optionss are:"
+  puts "options are:"
   require 'pp'
   pp options
 

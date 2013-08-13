@@ -11,27 +11,27 @@ class Store
     logger.level = Logger::DEBUG
 
     @snapshot_frequency = opts[:snapshot_frequency]
-    @archive_frequency = opts[:archive_frequency]
-    @snapshot_period = opts[:snapshot_period]
-    @snapshot_prefix = opts[:snapshot_prefix]
-    @archive_prefix = opts[:archive_prefix]
-    @time = opts[:time]
+    @archive_frequency  = opts[:archive_frequency]
+    @snapshot_period    = opts[:snapshot_period]
+    @snapshot_prefix    = opts[:snapshot_prefix]
+    @archive_prefix     = opts[:archive_prefix]
+    @time               = opts[:time]
   end
 
-  def get()
-    raise "implement me"
+  def get
+    raise NotImplementedError.new
   end
 
-  def put()
-    raise "implement me"
+  def put
+    raise NotImplementedError.new
   end
 
-  def get_snapshot_list()
-    raise "implement me"
+  def get_snapshot_list
+    raise NotImplementedError.new
   end
 
-  def get_archive_list()
-    raise "implement me"
+  def get_archive_list
+    raise NotImplementedError.new
   end
 
   class << self
@@ -48,25 +48,25 @@ class Store
 
   protected
 
-  def get_newest_archive()
-    raise "implment me"
+  def get_newest_archive
+    raise NotImplementedError.new
   end
 
 
   def recursive_archive_and_purge(opts={})
-    logger.debug "entering recursive_archive_and_purge"
+    logger.debug 'entering recursive_archive_and_purge'
     snapshot_list = opts[:snapshot_list]
 
     # return if there are no snapshots
     if snapshot_list.empty?
-      logger.info "no snapshots found"
+      logger.info 'no snapshots found'
       return true 
     end
 
     # return if there are not enough snapshots avilable
     minium_number_of_snapshots = (@snapshot_period.to_f/@snapshot_frequency.to_f).ceil
     if snapshot_list.size < minium_number_of_snapshots
-      logger.info "not enough snapshots avilable for archiving"
+      logger.info 'not enough snapshots avilable for archiving'
       logger.info "we found #{snapshot_list.size} but we need to keep at least #{minium_number_of_snapshots}"
       return true
     end
@@ -79,7 +79,7 @@ class Store
 
     # return if the oldest snapshot it not old enough to be archived
     if oldest_snapshot_age < @snapshot_period
-      logger.info "all snapshots are younger than snapshot_period"
+      logger.info 'all snapshots are younger than snapshot_period'
       return true 
     end
 
@@ -88,10 +88,10 @@ class Store
 
     # check to see if we have any archives
     if newest_archive.empty?
-      logger.info "looks like we don't have any archives yet"
+      logger.info 'looks like we don\'t have any archives yet'
       logger.info "archiving oldest snapshot #{oldest_snapshot}"
       archive_snapshot oldest_snapshot
-      logger.debug "recursing..."
+      logger.debug 'recursing...'
       recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: oldest_snapshot)
       return true
     end
@@ -103,7 +103,7 @@ class Store
     if need_to_archive?(oldest_snapshot_age,newest_archive_age)
       logger.info "archiving oldest snapshot #{oldest_snapshot}"
       archive_snapshot oldest_snapshot
-      logger.debug "recursing..."
+      logger.debug 'recursing...'
       recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: oldest_snapshot)
       return true
     end
@@ -115,7 +115,7 @@ class Store
     if need_to_archive?(second_oldest_snapshot_age,newest_archive_age)
       logger.info "archiving oldest snapshot #{oldest_snapshot}"
       archive_snapshot oldest_snapshot
-      logger.debug "recursing..."
+      logger.debug 'recursing...'
       recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: oldest_snapshot)
       return true
     end
@@ -123,17 +123,16 @@ class Store
     # if we got this far, then we just need to delete the oldest snapshot
     logger.info "deleting oldest snapshot #{oldest_snapshot}"
     delete_snapshot oldest_snapshot
-    logger.debug "recursing"
+    logger.debug 'recursing'
     recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: newest_archive)
-    return true
+    true
   end
   
-  def archive_snapshot
-    raise "implment me"
+  def archive_snapshot snapshot
+    raise NotImplementedError.new
   end
 
   def delete
-    raise "implment me"
+    raise NotImplementedError.new
   end
-
 end

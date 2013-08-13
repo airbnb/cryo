@@ -1,23 +1,21 @@
 class Message
-
   def initialize(opts)
   end
 
-  def get()
-    raise "implement me"
+  def get
+    raise NotImplementedError.new
   end
 
-  def put()
-    raise "implement me"
+  def put
+    raise NotImplementedError.new
   end
 
 
   class << self
     def create(options={})
-      message_class =  const_get(options[:type].to_s.capitalize)
-      return message_class.new(options)
+      message_class = const_get(options[:type].to_s.capitalize)
+      message_class.new(options)
     end
   end
-
 end
 

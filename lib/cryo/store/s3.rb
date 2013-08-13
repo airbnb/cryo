@@ -9,7 +9,7 @@ class S3 < Store
                :secret_access_key => opts[:aws_secret_key])
     @s3 = AWS::S3.new
     @snapshot_bucket = @s3.buckets[opts[:snapshot_bucket]]
-    @archive_bucket = @s3.buckets[opts[:archive_bucket]]
+    @archive_bucket  = @s3.buckets[opts[:archive_bucket]]
   end
 
   def get(opts={})
@@ -22,7 +22,7 @@ class S3 < Store
         return true
       end
     else
-      return @s3.buckets[bucket].objects[key].read
+      @s3.buckets[bucket].objects[key].read
     end
   end
 
@@ -42,13 +42,13 @@ class S3 < Store
   end
 
 
-  # retun an array listing the objects in our snapshot bucket
+  # return an array listing the objects in our snapshot bucket
   def get_snapshot_list
     get_bucket_listing(bucket: @snapshot_bucket, prefix: @prefix)
   end
 
  
-  # retun an array listing the objects in our archive bucket
+  # return an array listing the objects in our archive bucket
   def get_archive_list
     get_bucket_listing(bucket: archive_bucket, prefix: @prefix)
   end
@@ -75,11 +75,11 @@ class S3 < Store
   protected
 
   def expand_snapshot_name(shortname)
-    @snapshot_prefix + shortname + "Z.cryo"
+    @snapshot_prefix + shortname + 'Z.cryo'
   end
 
   def expand_archive_name(shortname)
-    @archive_prefix + shortname + "Z.cryo"
+    @archive_prefix + shortname + 'Z.cryo'
   end
 
   def trim_snapshot_name(longname)
@@ -87,7 +87,7 @@ class S3 < Store
   end
 
   def trim_archive_name(longname)
-    return "" if longname.nil?
+    return '' if longname.nil?
     longname.gsub(/^#{@archive_prefix}/,'').gsub(/Z\.cryo$/,'')
   end
 
@@ -119,7 +119,7 @@ class S3 < Store
     if directories.empty?
       matches = []
       @archive_bucket.objects.with_prefix(prefix).each {|o| matches << o.key}
-      return trim_archive_name(matches.last)
+      trim_archive_name(matches.last)
     else
       # recurse
       get_newest_archive(directories.last)

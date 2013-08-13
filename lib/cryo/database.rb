@@ -3,8 +3,8 @@ require_relative 'utils'
 class Database
   include Utils
 
-  def get_backup()
-    raise "implement me"
+  def get_backup
+    raise NotImplementedError.new
   end
 
   class << self
