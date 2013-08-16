@@ -73,7 +73,7 @@ module Utils
     @timestamp ||= @time.strftime('%Y/%m/%d/%H:%M:%S')
   end
 
-  def get_timstamped_key_name
+  def get_timestamped_key_name
     "#{@snapshot_prefix}#{@timestamp}Z.cryo"
   end
 

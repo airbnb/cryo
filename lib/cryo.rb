@@ -25,7 +25,7 @@ class Cryo
     @message            = Message.create(options.merge(type: 'sns'))
     @snapshot_prefix    = options[:snapshot_prefix]
     @archive_prefix     = options[:archive_prefix]
-    @key                = get_timstamped_key_name
+    @key                = get_timestamped_key_name
     @snapshot_frequency = options[:snapshot_frequency]
     @archive_frequency  = options[:archive_frequency]
     @snapshot_period    = options[:snapshot_period]
