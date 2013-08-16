@@ -16,24 +16,12 @@ class Mysql < Database
 
   ## run through all of the necessary steps to perform a backup
   def get_backup
-    get_dump
+    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --single-transaction > #{local_path}"
     local_path
   end
 
   def get_gzipped_backup
-    get_and_gzip_dump
-    local_path
-  end
-
-  private
-
-  ## perform a mysqldump to get an entire mysql dump on the local system, while gzipping it at the same time
-  def get_and_gzip_dump
     safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --single-transaction | gzip > #{local_path}"
-  end
-
-  ## perform a mysqldump to get an entire mysql dump on the local system
-  def get_dump
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --single-transaction > #{local_path}"
+    local_path
   end
 end

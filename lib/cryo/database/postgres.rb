@@ -14,13 +14,6 @@ class Postgres
   end
 
   def get_backup
-    take_dump
-  end
-
-  private
-
-  ## perform a pg_dumpall to get an entire pgdump on the local system
-  def take_dump
     safe_run "PGPASSWORD=#{password} pg_dumpall --host=#{host} --username=#{user} --file=#{local_path}"
     local_path
   end
