@@ -43,19 +43,19 @@ class Cryo
       logger.info 'getting compressed backup'
       compressed_backup = @database.get_gzipped_backup
       @compressed_size = File.size compressed_backup
-      @backed_up_time = get_utc_time
+      @backed_up_time = Time.now.utc
       logger.info "got compressed backup in #{(@backed_up_time - @start_time).round 2} seconds"
     else
       logger.info 'taking backup...'
       backup_file = @database.get_backup
       @uncompressed_size = File.size backup_file
       @uncompressed_time =  
-      logger.info "got backup in #{(get_utc_time - @start_time).round 2} seconds"
+      logger.info "got backup in #{(Time.now.utc - @start_time).round 2} seconds"
 
       logger.info 'compressing backup...'
       compressed_backup = gzip_file backup_file
       @compressed_size = File.size compressed_backup
-      @backed_up_time = get_utc_time
+      @backed_up_time = Time.now.utc
       logger.info "compressed backup in #{(@backed_up_time - @uncompressed_time).round 2} seconds"
     end
 
@@ -65,7 +65,7 @@ class Cryo
       bucket: options[:snapshot_bucket],
       key: @key
     )
-    @stored_time = get_utc_time
+    @stored_time = Time.now.utc
     logger.info "upload took #{(@stored_time - @backed_up_time).round 2} seconds"
 
     logger.info "completed entire backup in #{(@stored_time - @start_time).round 2} seconds :)"

@@ -43,10 +43,6 @@ module Utils
     raise "system dependency #{command} is not installed" unless system "which #{command} > /dev/null"
   end
 
-  def get_utc_time
-    Time.now.utc
-  end
-
   def get_utc_time_from_key_name(key_name)
     logger.debug "getting time for #{key_name}"
     year,month,day,time = key_name.split('/')
