@@ -1,9 +1,8 @@
-module Utils
+require 'zlib'
+require 'fileutils'
+require 'time'
 
-  require 'zlib'
-  require 'net/ntp'
-  require 'fileutils'
-    
+module Utils
 
   def delete_file(path)
     File.delete(path) if File.exists?(path)
@@ -66,18 +65,7 @@ module Utils
   end
 
   def get_utc_time
-    retries = 5
-    begin
-      Net::NTP.get(ENV['NTP_HOST'] || 'us.pool.ntp.org').time.getutc
-    rescue Object => o
-      retries -= 1
-      if retries > 0
-        logger.debug 'retrying ntp query again...'
-        sleep 2
-        retry
-      end
-      throw o
-    end
+    Time.now.utc
   end
 
   def get_utc_timestamp

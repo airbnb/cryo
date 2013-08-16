@@ -1,7 +1,6 @@
 require 'colorize'
 require 'aws-sdk'
 require 'logger'
-require 'net/ntp'
 
 
 ## require all ruby files recursively
@@ -12,7 +11,6 @@ end
 
 class Cryo
   include Utils
-#  HOST = `hostname`.chomp!
   attr_accessor :options, :s3, :md5, :sns, :logger, :key
 
   def initialize(options={})

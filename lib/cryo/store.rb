@@ -1,4 +1,3 @@
-#require 'net/ntp'
 require 'logger'
 
 class Store
