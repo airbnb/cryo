@@ -68,10 +68,6 @@ module Utils
     Time.now.utc
   end
 
-  def get_timestamped_key_name
-    "#{@snapshot_prefix}#{@timestamp}Z.cryo"
-  end
-
   def get_utc_time_from_key_name(key_name)
     logger.debug "getting time for #{key_name}"
     year,month,day,time = key_name.split('/')
