@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = %w(lib)
   gem.version       = Cryo::VERSION
 
-  gem.add_runtime_dependency 'colorize'
   gem.add_runtime_dependency 'trollop', '~> 2.0'
   gem.add_runtime_dependency 'aws-sdk', '~> 1.6'
   gem.add_development_dependency 'pry'

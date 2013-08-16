@@ -1,4 +1,3 @@
-require 'colorize'
 require 'aws-sdk'
 require 'logger'
 
