@@ -10,7 +10,6 @@ class Message
     raise NotImplementedError.new
   end
 
-
   class << self
     def create(options={})
       message_class = const_get(options[:type].to_s.capitalize)

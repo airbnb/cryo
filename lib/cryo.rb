@@ -1,12 +1,10 @@
 require 'aws-sdk'
 require 'logger'
 
-
 ## require all ruby files recursively
 Dir.glob(File.join(File.dirname(__FILE__),'**/*.rb')).sort.each do |file|
   require_relative file
 end
-
 
 class Cryo
   include Utils
@@ -35,7 +33,6 @@ class Cryo
     @report_path        = options[:report_path]
     @key                = "#{@snapshot_prefix}#{@timestamp}Z.cryo"
   end
-
 
   def backup!
     report = {}

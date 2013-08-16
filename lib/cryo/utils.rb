@@ -8,7 +8,6 @@ module Utils
     File.delete(path) if File.exists?(path)
   end
 
-
   def get_tempfile
     #    Tempfile.new('redis-backup','/mnt/cryo').path
     tmp_file = File.join(@tmp_path,"tmp-#{rand 9999}")
@@ -16,7 +15,6 @@ module Utils
     FileUtils.touch tmp_file
     tmp_file
   end
-
 
   def gzip_file(path)
     # given a path to a file, return a gzipped version of it

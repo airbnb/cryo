@@ -8,7 +8,6 @@ class Sns < Message
     @topic = opts[:topic] || opts[:topic_arn]
   end
 
-
   def send(opts={})
     @sns.publish({
       :message   => opts[:message],

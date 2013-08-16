@@ -3,7 +3,6 @@
 require 'trollop'
 require_relative '../lib/cryo'
 
-
 @required_inputs = %w(aws_access_key aws_secret_key)
 
 @options={}
@@ -16,7 +15,6 @@ require_relative '../lib/cryo'
 def log(msg='')
   STDERR.puts msg if @log
 end
-
 
 def print_help_and_exit
   banner = <<-END_OF_BANNER
@@ -78,7 +76,6 @@ def verify_inputs
   end
 end
 
-
 def backup
   %w{host}.each {|i| @required_inputs << i}
   case @noun
@@ -90,7 +87,6 @@ def backup
   end
 end
 
-
 def list
   case @noun
   when 'snapshots'
@@ -100,7 +96,6 @@ def list
   end
 end
 
-
 def get
   case @noun
   when 'archives'
@@ -109,7 +104,6 @@ def get
     print_help_and_exit
   end
 end
-
 
 log 'starting to parse arguments'
 print_help_and_exit if ARGV.size < 2
@@ -129,21 +123,16 @@ else
 end
 
 parse_inputs
-
-
 verify_inputs
-
 log "options are #{@options.inspect}"
 
 Kernel.exit 2
-
 
 SUB_COMMANDS = %w(backup list get)
 global_opts = Trollop::options do
   STDERR.puts 'entering global options'
   stop_on_unknown
   version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
-
 
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
@@ -152,10 +141,6 @@ global_opts = Trollop::options do
       :required => true)
   stop_on SUB_COMMANDS
 end
-
-
-
-
 
 cmd = ARGV.shift # get the subcommand
 cmd_opts = \
@@ -190,14 +175,12 @@ always_required_options = Trollop::options do
   STDERR.puts 'entering always required options'
   stop_on_unknown
 
-
   opt(:aws_secret_key,
       'aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable',
       :type => String,
       :default => ENV['CRYO_AWS_SECRET_KEY'] || nil,
       :required => true)
 end
-
 
 puts "Global options: #{global_opts.inspect}"
 puts "Subcommand: #{cmd.inspect}"

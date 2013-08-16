@@ -10,12 +10,10 @@ class Redis
     self.local_path  = opts[:local_path] || get_tempfile
   end
 
-
   ## get a copy of the db from remote host
   def get_backup
     take_dump
   end
-
 
   ## get a zipped copy of the db from remote host
   def get_gzipped_backup
@@ -38,7 +36,6 @@ class Redis
     local_path
   end
 
-
   ## copy the redis db into a new file and stream it here while zipping
   def take_dump_and_gzip
     # TODO(martin): verify that both the local and remote hosts have enough free disk space for this to complete
@@ -52,7 +49,6 @@ class Redis
     end
     local_path
   end
-
 
   def ssh(command)
     safe_run "ssh #{user}@#{host} #{command}"

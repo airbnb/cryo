@@ -132,12 +132,10 @@ end
 
 options.merge!(type: mode)
 
-
 required_parameters.each do |arg|
   Trollop::die arg.to_sym, "needs to specified on the commandline or set by the CRYO_#{arg.upcase} environment variable" \
     if options[arg.to_sym].nil? or ! options[arg.to_sym]
 end unless mode == 'get'
-
 
 run = Cryo.new(options)
 

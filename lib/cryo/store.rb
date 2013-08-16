@@ -1,7 +1,6 @@
 require 'logger'
 
 class Store
-
   include Utils
   attr_accessor :logger
 
@@ -51,7 +50,6 @@ class Store
     raise NotImplementedError.new
   end
 
-
   def recursive_archive_and_purge(opts={})
     logger.debug 'entering recursive_archive_and_purge'
     snapshot_list = opts[:snapshot_list]
@@ -94,7 +92,6 @@ class Store
       recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: oldest_snapshot)
       return true
     end
-
 
     newest_archive_age = get_age_from_key_name(newest_archive)
 

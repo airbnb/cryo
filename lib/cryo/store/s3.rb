@@ -26,7 +26,6 @@ class S3 < Store
     end
   end
 
-
   def put(opts={})
     bucket  = opts[:bucket]
     key     = opts[:key]
@@ -34,19 +33,16 @@ class S3 < Store
     @s3.buckets[bucket].objects[key].write(content) # TODO: verify that bucket exists?
   end
 
-
   def etag(opts={})
     bucket = opts[:bucket]
     key    = opts[:key]
     @s3.buckets[bucket].objects[key].etag
   end
 
-
   # return an array listing the objects in our snapshot bucket
   def get_snapshot_list
     get_bucket_listing(bucket: @snapshot_bucket, prefix: @prefix)
   end
-
 
   # return an array listing the objects in our archive bucket
   def get_archive_list
@@ -110,7 +106,6 @@ class S3 < Store
       snapshot_object.move_to(full_archive_name, :bucket => @archive_bucket)
     end
   end
-
 
   # this function returns the last item in a bucket that matches the given prefix
   def get_newest_archive(prefix=@archive_prefix)

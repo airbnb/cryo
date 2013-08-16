@@ -1,5 +1,4 @@
 options = Trollop::options do
-
   opt(:snapshot_frequency,
       'how often to take backups (in mins)',
       :type => Integer,
@@ -66,7 +65,6 @@ options = Trollop::options do
       :default => ENV['CRYO_PASSWORD'] || nil,
       :required => true)
 
-
   case mode
   when 'mysql'
   when 'redis'
@@ -87,9 +85,7 @@ end
 
 options.merge!(type: mode)
 
-
-
-  puts 'options are:'
-  require 'pp'
-  pp options
+puts 'options are:'
+require 'pp'
+pp options
 

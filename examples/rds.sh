@@ -16,6 +16,7 @@ cd $(dirname $0) && cd ..
 
 # or
 
+
 export CRYO_AWS_ACCESS_KEY=some_key
 export CRYO_AWS_SECRET_KEY=some_secret
 export CRYO_BUCKET=some_other_buk
