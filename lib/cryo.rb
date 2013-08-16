@@ -16,6 +16,8 @@ class Cryo
     self.logger  = Logger.new(STDERR)
     logger.level = Logger::DEBUG
 
+    @start_time         = Time.now.utc
+    @start_timestamp    = @start_time.strftime('%Y/%m/%d/%H:%M:%S')
     @database = Database.create(options) \
       unless options[:type] == 'list' or options[:type] == 'get'
     @store              = Store.create(options.merge(type: 's3', time: @start_time))
@@ -30,11 +32,10 @@ class Cryo
     @tmp_path           = options[:tmp_path]
     @report_path        = options[:report_path]
     @key                = "#{@snapshot_prefix}#{@start_timestamp}Z.cryo"
+    @start_time         = Time.now.utc
+    @start_timestamp    = @start_time.strftime('%Y/%m/%d/%H:%M:%S')
 
     @uncompressed_time, @backed_up_time, @stored_time = nil
-    @start_time ||= get_utc_time
-    @start_timestamp ||= @start_time.strftime('%Y/%m/%d/%H:%M:%S')
-
     @uncompressed_size, @compressed_size = nil
   end
 
