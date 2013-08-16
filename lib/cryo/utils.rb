@@ -68,11 +68,6 @@ module Utils
     Time.now.utc
   end
 
-  def get_utc_timestamp
-    @time ||= get_utc_time  # don't change the endpoint!!!
-    @timestamp ||= @time.strftime('%Y/%m/%d/%H:%M:%S')
-  end
-
   def get_timestamped_key_name
     "#{@snapshot_prefix}#{@timestamp}Z.cryo"
   end

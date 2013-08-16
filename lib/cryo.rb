@@ -17,7 +17,8 @@ class Cryo
     self.logger  = Logger.new(STDERR)
     logger.level = Logger::DEBUG
 
-    get_utc_timestamp # save start time for backup
+    @time ||= get_utc_time  # don't change the endpoint!!!
+    @timestamp ||= @time.strftime('%Y/%m/%d/%H:%M:%S')
 
     @database = Database.create(options) \
       unless options[:type] == 'list' or options[:type] == 'get'
