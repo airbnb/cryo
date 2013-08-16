@@ -18,25 +18,6 @@ module Utils
   end
 
 
-  def ungzip_file(path)
-    # get a temp file
-    tempfile = get_tempfile
-    #logger.info "unzipping #{path} to #{tempfile}..."
-
-    # stream the gzipped file into an uncompressed file
-    Zlib::GzipReader.open(path) do |gz|
-      File.open(tempfile, 'w') do |open_file|
-        # write 1M chunks at a time
-        open_file.write gz.read(1024*1024) until gz.eof?
-      end
-    end
-    #logger.info "finished unzipping file"
-
-    # return unzipped file
-    tempfile
-  end
-
-
   def gzip_file(path)
     # given a path to a file, return a gzipped version of it
     tempfile = get_tempfile
