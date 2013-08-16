@@ -13,8 +13,8 @@ class S3 < Store
   end
 
   def get(opts={})
-    bucket = opts[:bucket]
-    key = opts[:key]
+    bucket    = opts[:bucket]
+    key       = opts[:key]
     file_path = opts[:file] || opts[:path]
     if file_path
       File.open(file_path,'w') do |file|
@@ -28,8 +28,8 @@ class S3 < Store
 
 
   def put(opts={})
-    bucket = opts[:bucket]
-    key = opts[:key]
+    bucket  = opts[:bucket]
+    key     = opts[:key]
     content = opts[:content]
     @s3.buckets[bucket].objects[key].write(content) # TODO: verify that bucket exists?
   end
@@ -37,7 +37,7 @@ class S3 < Store
 
   def etag(opts={})
     bucket = opts[:bucket]
-    key = opts[:key]
+    key    = opts[:key]
     @s3.buckets[bucket].objects[key].etag
   end
 

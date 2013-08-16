@@ -41,73 +41,73 @@ END_OF_BANNER
 
   opt(:tmp_path,
       'where should temp files be created',
-      :type => String,
-      :default => ENV['CRYO_TMP_PATH'])
+      type: String,
+      default: ENV['CRYO_TMP_PATH'])
 
   opt(:snapshot_frequency,
       'how often to take backups (in mins)',
-      :type => Integer,
-      :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
+      type: Integer,
+      default: ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
 
   opt(:archive_frequency,
       'maximum time in between archives (in mins)',
-      :type => Integer,
-      :default => ENV['CRYO_ARCHIVE_FREQUENCY'].to_i)
+      type: Integer,
+      default: ENV['CRYO_ARCHIVE_FREQUENCY'].to_i)
 
   opt(:snapshot_period,
       'time before snapshots get deleted or archived (in mins)',
-      :type => Integer,
-      :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
+      type: Integer,
+      default: ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
 
   opt(:snapshot_bucket,
       's3 bucket to use for snapshots',
-      :type => String,
-      :default => ENV['CRYO_SNAPSHOT_BUCKET'])
+      type: String,
+      default: ENV['CRYO_SNAPSHOT_BUCKET'])
 
   opt(:snapshot_prefix,
       's3 object prefix to use for snapshots',
-      :type => String,
-      :default => ENV['CRYO_SNAPSHOT_PREFIX'])
+      type: String,
+      default: ENV['CRYO_SNAPSHOT_PREFIX'])
 
   opt(:archive_bucket,
       's3 bucket to use for archives',
-      :type => String,
-      :default => ENV['CRYO_ARCHIVE_BUCKET'])
+      type: String,
+      default: ENV['CRYO_ARCHIVE_BUCKET'])
 
   opt(:archive_prefix,
       's3 object prefix to use for archives',
-      :type => String,
-      :default => ENV['CRYO_ARCHIVE_PREFIX'])
+      type: String,
+      default: ENV['CRYO_ARCHIVE_PREFIX'])
 
   opt(:sns_topic,
       'sns topic',
-      :type => String,
-      :default => ENV['CRYO_SNS_TOPIC'])
+      type: String,
+      default: ENV['CRYO_SNS_TOPIC'])
 
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
-      :type => String,
-      :default => ENV['CRYO_AWS_ACCESS_KEY'])
+      type: String,
+      default: ENV['CRYO_AWS_ACCESS_KEY'])
 
   opt(:aws_secret_key,
       'aws_secret_key. Can be set using the AWS_SECRET_KEY environment variable',
-      :type => String,
-      :default => ENV['CRYO_AWS_SECRET_KEY'])
+      type: String,
+      default: ENV['CRYO_AWS_SECRET_KEY'])
 
   opt(:host,
       'remote host. Can be set using the CRYO_HOST environment variable',
-      :type => String,
-      :default => ENV['CRYO_HOST'])
+      type: String,
+      default: ENV['CRYO_HOST'])
 
   opt(:user,
       'remote user',
-      :type => String,
-      :default => ENV['CRYO_USER'])
+      type: String,
+      default: ENV['CRYO_USER'])
 
   opt(:password,
       'remote password',
-      :type => String,
-      :default => ENV['CRYO_PASSWORD'])
+      type: String,
+      default: ENV['CRYO_PASSWORD'])
 
 
   case mode
@@ -115,8 +115,8 @@ END_OF_BANNER
   when 'redis'
     opt(:path,
         'path to redis database file',
-        :type => String,
-        :default => ENV['CRYO_PATH'])
+        type: String,
+        default: ENV['CRYO_PATH'])
     required_parameters << 'path'
   when 'postgres'
   when 'list'
