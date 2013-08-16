@@ -27,7 +27,7 @@ environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO
 
 More docs and examples can be found at https://github.com/airbnb/cryo
 
-Usage: 
+Usage:
       cryo [backup,list,get] [options]
 
 where [options] are:
@@ -144,7 +144,7 @@ global_opts = Trollop::options do
   stop_on_unknown
   version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
 
-  
+
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
       :type => String,
@@ -186,7 +186,7 @@ else
   Trollop::die "unknown subcommand #{cmd.inspect}"
 end
 
-always_required_options = Trollop::options do 
+always_required_options = Trollop::options do
   STDERR.puts 'entering always required options'
   stop_on_unknown
 

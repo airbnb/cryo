@@ -4,7 +4,7 @@ class Store
 
   include Utils
   attr_accessor :logger
-  
+
   def initialize(opts={})
     self.logger = Logger.new(STDERR)
     logger.level = Logger::DEBUG
@@ -38,7 +38,7 @@ class Store
       const_get(options[:type].to_s.capitalize).new(options)
     end
   end
-  
+
   def archive_and_purge
     snapshot_list = get_snapshot_list
     newest_archive = get_newest_archive
@@ -59,7 +59,7 @@ class Store
     # return if there are no snapshots
     if snapshot_list.empty?
       logger.info 'no snapshots found'
-      return true 
+      return true
     end
 
     # return if there are not enough snapshots avilable
@@ -79,7 +79,7 @@ class Store
     # return if the oldest snapshot it not old enough to be archived
     if oldest_snapshot_age < @snapshot_period
       logger.info 'all snapshots are younger than snapshot_period'
-      return true 
+      return true
     end
 
     # if we got this far, then the oldest snapshot needs to be either archived or deleted
@@ -126,7 +126,7 @@ class Store
     recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: newest_archive)
     true
   end
-  
+
   def archive_snapshot(snapshot)
     raise NotImplementedError.new
   end

@@ -22,7 +22,7 @@ module Utils
     # get a temp file
     tempfile = get_tempfile
     #logger.info "unzipping #{path} to #{tempfile}..."
-    
+
     # stream the gzipped file into an uncompressed file
     Zlib::GzipReader.open(path) do |gz|
       File.open(tempfile, 'w') do |open_file|
@@ -69,7 +69,7 @@ module Utils
   end
 
   def get_utc_timestamp
-    @time ||= get_utc_time  # don't change the endpoint!!! 
+    @time ||= get_utc_time  # don't change the endpoint!!!
     @timestamp ||= @time.strftime('%Y/%m/%d/%H:%M:%S')
   end
 
@@ -81,7 +81,7 @@ module Utils
     logger.debug "getting time for #{key_name}"
     year,month,day,time = key_name.split('/')
     hour,min,sec = time.split(':')
-    Time.utc(year,month,day,hour,min,sec) 
+    Time.utc(year,month,day,hour,min,sec)
   end
 
   # returns the age of the snapshot in mins

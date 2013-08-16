@@ -1,11 +1,11 @@
 class S3 < Store
   require 'aws-sdk'
-  
+
   attr_accessor :snapshot_bucket, :archive_bucket, :prefix
 
   def initialize(opts={})
     super(opts)
-    AWS.config(:access_key_id => opts[:aws_access_key], 
+    AWS.config(:access_key_id => opts[:aws_access_key],
                :secret_access_key => opts[:aws_secret_key])
     @s3 = AWS::S3.new
     @snapshot_bucket = @s3.buckets[opts[:snapshot_bucket]]
@@ -26,7 +26,7 @@ class S3 < Store
     end
   end
 
-  
+
   def put(opts={})
     bucket = opts[:bucket]
     key = opts[:key]
@@ -47,7 +47,7 @@ class S3 < Store
     get_bucket_listing(bucket: @snapshot_bucket, prefix: @prefix)
   end
 
- 
+
   # return an array listing the objects in our archive bucket
   def get_archive_list
     get_bucket_listing(bucket: archive_bucket, prefix: @prefix)
@@ -110,7 +110,7 @@ class S3 < Store
       snapshot_object.move_to(full_archive_name, :bucket => @archive_bucket)
     end
   end
-  
+
 
   # this function returns the last item in a bucket that matches the given prefix
   def get_newest_archive(prefix=@archive_prefix)

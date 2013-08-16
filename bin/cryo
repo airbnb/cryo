@@ -19,7 +19,7 @@ required_parameters = %w(archive_bucket
 
 mode = ARGV.shift
 
-options = Trollop::options do 
+options = Trollop::options do
   version "cryo #{Cryo::VERSION} (c) 2013 Airbnb"
   banner <<-END_OF_BANNER
 
@@ -32,7 +32,7 @@ environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO
 
 More docs and examples can be found at https://github.com/airbnb/cryo
 
-Usage: 
+Usage:
       cryo [redis,mysql,postgres,list,get] [options]
 
 where [options] are:
@@ -43,12 +43,12 @@ END_OF_BANNER
       'where should temp files be created',
       :type => String,
       :default => ENV['CRYO_TMP_PATH'])
-  
+
   opt(:snapshot_frequency,
       'how often to take backups (in mins)',
       :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
-  
+
   opt(:archive_frequency,
       'maximum time in between archives (in mins)',
       :type => Integer,
@@ -56,7 +56,7 @@ END_OF_BANNER
 
   opt(:snapshot_period,
       'time before snapshots get deleted or archived (in mins)',
-      :type => Integer, 
+      :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
 
   opt(:snapshot_bucket,
@@ -110,7 +110,7 @@ END_OF_BANNER
       :default => ENV['CRYO_PASSWORD'])
 
 
-  case mode 
+  case mode
   when 'mysql'
   when 'redis'
     opt(:path,
@@ -125,7 +125,7 @@ END_OF_BANNER
     unless mode == '--help'
       STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql, list, get]'
       STDERR.puts 'Please use --help for more info'
-      exit 1 
+      exit 1
     end
   end
 end
@@ -141,7 +141,7 @@ end unless mode == 'get'
 
 run = Cryo.new(options)
 
-case mode 
+case mode
 when 'list'
   run.list_snapshots
 when 'get'
@@ -153,5 +153,5 @@ else
   run.archive_and_purge
 end
 
-# 
+#
 # run.list_archives

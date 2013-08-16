@@ -1,11 +1,11 @@
-options = Trollop::options do 
+options = Trollop::options do
 
   opt(:snapshot_frequency,
       'how often to take backups (in mins)',
       :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i || nil,
       :required => true)
-  
+
   opt(:archive_frequency,
       'maximum time in between archives (in mins)',
       :type => Integer,
@@ -14,7 +14,7 @@ options = Trollop::options do
 
   opt(:snapshot_period,
       'time before snapshots get deleted or archived (in mins)',
-      :type => Integer, 
+      :type => Integer,
       :default => ENV['CRYO_SNAPSHOT_PERIOD'].to_i || nil,
       :required => true)
 
@@ -67,7 +67,7 @@ options = Trollop::options do
       :required => true)
 
 
-  case mode 
+  case mode
   when 'mysql'
   when 'redis'
     opt(:path,
@@ -80,7 +80,7 @@ options = Trollop::options do
     unless mode == '--help'
       STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql]'
       STDERR.puts 'Please use --help for more info'
-      exit 1 
+      exit 1
     end
   end
 end
