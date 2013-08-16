@@ -15,7 +15,8 @@ required_parameters = %w(archive_bucket
                          snapshot_prefix
                          sns_topic
                          tmp_path
-                         user)
+                         user
+                         report_path)
 
 mode = ARGV.shift
 
@@ -109,6 +110,10 @@ END_OF_BANNER
       type: String,
       default: ENV['CRYO_PASSWORD'])
 
+  opt(:report_path,
+      'where to write our report',
+      :type => String,
+      :default => ENV['CRYO_REPORT_PATH'])
 
   case mode
   when 'mysql'
@@ -149,6 +154,7 @@ when 'get'
 else
   run.backup!
   run.archive_and_purge
+  run.write_report
 end
 
 #
