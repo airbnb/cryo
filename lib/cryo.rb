@@ -21,7 +21,6 @@ class Cryo
     @database = Database.create(options) \
       unless options[:type] == 'list' or options[:type] == 'get'
     @store              = Store.create(options.merge(type: 's3', time: @start_time))
-    @message            = Message.create(options.merge(type: 'sns'))
     @snapshot_prefix    = options[:snapshot_prefix]
     @archive_prefix     = options[:archive_prefix]
     @snapshot_frequency = options[:snapshot_frequency]

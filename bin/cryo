@@ -13,7 +13,6 @@ required_parameters = %w(archive_bucket
                          snapshot_frequency
                          snapshot_period
                          snapshot_prefix
-                         sns_topic
                          tmp_path
                          user
                          report_path)
@@ -79,11 +78,6 @@ END_OF_BANNER
       's3 object prefix to use for archives',
       type: String,
       default: ENV['CRYO_ARCHIVE_PREFIX'])
-
-  opt(:sns_topic,
-      'sns topic',
-      type: String,
-      default: ENV['CRYO_SNS_TOPIC'])
 
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
