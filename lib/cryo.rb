@@ -9,7 +9,7 @@ end
 
 class Cryo
   include Utils
-  attr_accessor :options, :s3, :md5, :sns, :logger, :key
+  attr_accessor :options, :s3, :md5, :logger, :key
 
   def initialize(options={})
     self.options = options
