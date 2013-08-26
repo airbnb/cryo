@@ -73,10 +73,10 @@ class Cryo
 
   def report
     {
-      start_time:        @start_time.to_i,
-      uncompressed_time: @uncompressed_time.to_i,
-      backed_up_time:    @backed_up_time.to_i,
-      stored_time:       @stored_time.to_i,
+      start_time:        @start_time.to_f,
+      uncompressed_time: @uncompressed_time.to_f,
+      backed_up_time:    @backed_up_time.to_f,
+      stored_time:       @stored_time.to_f,
       compressed_size:   @compressed_size,
       uncompressed_size: @uncompressed_size
     }.delete_if do |k, v|
