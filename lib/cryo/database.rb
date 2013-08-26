@@ -1,4 +1,4 @@
-require_relative 'utils'
+require 'cryo/utils'
 
 class Database
   include Utils

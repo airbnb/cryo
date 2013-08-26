@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/cryo'
+require 'cryo'
 require 'trollop'
 
 required_parameters = %w(aws_access_key

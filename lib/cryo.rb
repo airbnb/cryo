@@ -2,10 +2,16 @@ require 'aws-sdk'
 require 'logger'
 require 'json'
 
-## require all ruby files recursively
-Dir.glob(File.join(File.dirname(__FILE__),'**/*.rb')).sort.each do |file|
-  require_relative file
-end
+require 'cryo/utils'
+require 'cryo/version'
+
+require 'cryo/database'
+require 'cryo/database/mysql'
+require 'cryo/database/postgres'
+require 'cryo/database/redis'
+
+require 'cryo/store'
+require 'cryo/store/s3'
 
 class Cryo
   include Utils
