@@ -24,11 +24,7 @@ class Store
     raise NotImplementedError.new
   end
 
-  def get_snapshot_list
-    raise NotImplementedError.new
-  end
-
-  def get_archive_list
+  def list_snapshots
     raise NotImplementedError.new
   end
 
@@ -38,18 +34,7 @@ class Store
     end
   end
 
-  def archive_and_purge
-    snapshot_list = get_snapshot_list
-    newest_archive = get_newest_archive
-    recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: newest_archive)
-  end
-
-  protected
-
-  def get_newest_archive
-    raise NotImplementedError.new
-  end
-
+  # TODO(pierre): reimplement
   def recursive_archive_and_purge(opts={})
     logger.debug 'entering recursive_archive_and_purge'
     snapshot_list = opts[:snapshot_list]
@@ -122,13 +107,5 @@ class Store
     logger.debug 'recursing'
     recursive_archive_and_purge(snapshot_list: snapshot_list, newest_archive: newest_archive)
     true
-  end
-
-  def archive_snapshot(snapshot)
-    raise NotImplementedError.new
-  end
-
-  def delete
-    raise NotImplementedError.new
   end
 end

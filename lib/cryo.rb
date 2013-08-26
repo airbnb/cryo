@@ -28,12 +28,6 @@ class Cryo
       unless options[:type] == 'list' or options[:type] == 'get'
     @store              = Store.create(options.merge(type: 's3', time: @start_time))
     @snapshot_prefix    = options[:snapshot_prefix]
-    @archive_prefix     = options[:archive_prefix]
-    @snapshot_frequency = options[:snapshot_frequency]
-    @archive_frequency  = options[:archive_frequency]
-    @snapshot_period    = options[:snapshot_period]
-    @snapshot_bucket    = options[:snapshot_bucket]
-    @archive_bucket     = options[:archive_bucket]
     @tmp_path           = options[:tmp_path]
     @report_path        = options[:report_path]
     @key                = "#{@snapshot_prefix}#{@start_timestamp}Z.cryo"
@@ -93,29 +87,4 @@ class Cryo
   def write_report
     IO::write @report_path, report
   end
-
-  def archive_and_purge
-    logger.info 'archiving and purging...'
-    @store.archive_and_purge()
-    logger.info 'done archiving and purging :)'
-  end
-
-  def list_snapshots
-    snapshot_list = @store.get_bucket_listing(bucket: @snapshot_bucket, prefix: @snapshot_prefix)
-    puts 'here is what I see in the snapshot bucket:'
-    snapshot_list.each { |i| puts "  #{i.key}" }
-  end
-
-  def list_archives
-    archive_list = @store.get_bucket_listing(bucket: @archive_bucket, prefix: @archive_prefix)
-    puts 'here is what I see in the archive bucket:'
-    archive_list.each { |i| puts "  #{i.key}" }
-  end
-
-  def get_snapshot(snapshot)
-    basename = File.basename snapshot
-    puts "getting #{snapshot} and saving it in #{File.join(Dir.pwd,basename)}"
-    @store.get(bucket: @snapshot_bucket, key: snapshot, file: basename)
-  end
-
 end
