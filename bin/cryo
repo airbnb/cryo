@@ -1,17 +1,13 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/cryo'
+require 'cryo'
 require 'trollop'
 
-required_parameters = %w(archive_bucket
-                         archive_frequency
-                         aws_access_key
+required_parameters = %w(aws_access_key
                          aws_secret_key
                          host
                          password
                          snapshot_bucket
-                         snapshot_frequency
-                         snapshot_period
                          snapshot_prefix
                          tmp_path
                          user
@@ -33,7 +29,7 @@ environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO
 More docs and examples can be found at https://github.com/airbnb/cryo
 
 Usage:
-      cryo [redis,mysql,postgres,list,get] [options]
+      cryo [redis,mysql,postgres] [options]
 
 where [options] are:
 
@@ -44,21 +40,6 @@ END_OF_BANNER
       type: String,
       default: ENV['CRYO_TMP_PATH'])
 
-  opt(:snapshot_frequency,
-      'how often to take backups (in mins)',
-      type: Integer,
-      default: ENV['CRYO_SNAPSHOT_FREQUENCY'].to_i)
-
-  opt(:archive_frequency,
-      'maximum time in between archives (in mins)',
-      type: Integer,
-      default: ENV['CRYO_ARCHIVE_FREQUENCY'].to_i)
-
-  opt(:snapshot_period,
-      'time before snapshots get deleted or archived (in mins)',
-      type: Integer,
-      default: ENV['CRYO_SNAPSHOT_PERIOD'].to_i)
-
   opt(:snapshot_bucket,
       's3 bucket to use for snapshots',
       type: String,
@@ -68,16 +49,6 @@ END_OF_BANNER
       's3 object prefix to use for snapshots',
       type: String,
       default: ENV['CRYO_SNAPSHOT_PREFIX'])
-
-  opt(:archive_bucket,
-      's3 bucket to use for archives',
-      type: String,
-      default: ENV['CRYO_ARCHIVE_BUCKET'])
-
-  opt(:archive_prefix,
-      's3 object prefix to use for archives',
-      type: String,
-      default: ENV['CRYO_ARCHIVE_PREFIX'])
 
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
@@ -137,19 +108,8 @@ required_parameters.each do |arg|
 end unless mode == 'get'
 
 run = Cryo.new(options)
-
-case mode
-when 'list'
-  run.list_snapshots
-when 'get'
-  snapshot = ARGV.shift
-  raise 'you did not specify a snapshot!' if snapshot.nil?
-  run.get_snapshot(snapshot)
-else
-  run.backup!
-  run.archive_and_purge
-  run.write_report
-end
+run.backup!
+run.write_report
 
 #
 # run.list_archives
