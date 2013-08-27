@@ -3,6 +3,10 @@ require 'fileutils'
 require 'time'
 
 module Utils
+  def delete_file(path)
+    File.delete(path) if File.exists?(path)
+  end
+
   def get_tempfile
     #    Tempfile.new('redis-backup','/mnt/cryo').path
     tmp_file = File.join(@tmp_path,"tmp-#{rand 9999}")
