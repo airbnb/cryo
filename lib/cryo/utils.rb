@@ -55,16 +55,4 @@ module Utils
     age_in_mins_as_float = (@time - snapshot_time) / 60
     age_in_mins_as_float.to_i
   end
-
-  # find out if we have an archive that is more recent than the snapshot period
-  def need_to_archive?(old_snapshot_age,new_archive_age)
-    logger.debug 'checking to see if we should archive'
-    logger.debug "oldest snapshot age is #{old_snapshot_age}"
-    logger.debug "newest archive time is #{new_archive_age}"
-    logger.debug "@snapshot_period is #{@archive_frequency}"
-    answer = (new_archive_age - old_snapshot_age) > @archive_frequency
-    logger.debug "returning #{answer.inspect}"
-
-    answer
-  end
 end
