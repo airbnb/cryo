@@ -1,10 +1,9 @@
 class Redis
   include Utils
-  attr_accessor :user, :host, :remote_path, :local_path, :opts, :tmp_path
+  attr_accessor :user, :host, :remote_path, :local_path, :opts
 
   def initialize(opts={})
     self.host        = opts[:host]       || raise('you need to specify a remote host')
-    self.tmp_path    = opts[:tmp_path]   || raise('you need to specify a tmp path')
     self.remote_path = opts[:path]       || '/mnt/redis/dump.rdb'
     self.user        = opts[:user]       || 'ubuntu'
     self.local_path  = opts[:local_path] || get_tempfile
@@ -12,34 +11,17 @@ class Redis
 
   ## get a copy of the db from remote host
   def get_backup
-    # TODO(martin): verify that both the local and remote hosts have enough free disk space for this to complete
-    temp_file = remote_path + "-backup-#{rand 99999}"
-    # this is kinda hacky, but we need to make sure that we remove a backup if we take one
-    begin
-      ssh "cp #{remote_path} #{temp_file}"
-      safe_run "scp #{user}@#{host}:#{temp_file} #{local_path}"
-    ensure
-      ssh "rm -f #{temp_file}"
-    end
+    safe_run "scp #{user}@#{host}:#{remote_path} #{local_path}"
     local_path
   end
 
   ## get a zipped copy of the db from remote host
   def get_gzipped_backup
-    # TODO(martin): verify that both the local and remote hosts have enough free disk space for this to complete
-    temp_file = remote_path + "-backup-#{rand 99999}"
-    # this is kinda hacky, but we need to make sure that we remove a backup if we take one
-    begin
-      ssh "cp #{remote_path} #{temp_file}"
-      safe_run "(ssh #{user}@#{host} cat #{temp_file}) | gzip > #{local_path}"
-    ensure
-      ssh "rm -f #{temp_file}"
-    end
+    safe_run "ssh #{user}@#{host} gzip -c #{remote_path} > #{local_path}"
     local_path
   end
 
   private
-
   def ssh(command)
     safe_run "ssh #{user}@#{host} #{command}"
   end
