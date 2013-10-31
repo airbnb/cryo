@@ -4,6 +4,7 @@ class Redis
 
   def initialize(opts={})
     self.host        = opts[:host]       || raise('you need to specify a remote host')
+    self.tmp_path    = opts[:tmp_path]   || raise('you need to specify a tmp path')
     self.remote_path = opts[:path]       || '/mnt/redis/dump.rdb'
     self.user        = opts[:user]       || 'ubuntu'
     self.local_path  = opts[:local_path] || get_tempfile
