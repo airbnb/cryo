@@ -1,6 +1,6 @@
 class Redis
   include Utils
-  attr_accessor :user, :host, :remote_path, :local_path, :opts
+  attr_accessor :user, :host, :remote_path, :local_path, :tmp_path
 
   def initialize(opts={})
     self.host        = opts[:host]       || raise('you need to specify a remote host')
