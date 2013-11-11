@@ -49,7 +49,7 @@ class Cryo
       logger.info 'taking backup...'
       backup_file = @database.get_backup
       @uncompressed_size = File.size backup_file
-      @uncompressed_time =  
+      @uncompressed_time = Time.now.utc
       logger.info "got backup in #{(Time.now.utc - @start_time).round 2} seconds"
 
       logger.info 'compressing backup...'
