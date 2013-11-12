@@ -16,12 +16,12 @@ class Mysql < Database
 
   ## run through all of the necessary steps to perform a backup
   def get_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --single-transaction > #{local_path}"
+    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction > #{local_path}"
     local_path
   end
 
   def get_gzipped_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --single-transaction | gzip > #{local_path}"
+    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction | gzip > #{local_path}"
     local_path
   end
 end
