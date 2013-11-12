@@ -85,6 +85,6 @@ class Cryo
   end
 
   def write_report
-    IO::write @report_path, report
+    IO::write @report_path, report if @report_path
   end
 end
