@@ -89,6 +89,10 @@ END_OF_BANNER
         default: ENV['CRYO_PATH'])
     required_parameters << 'path'
   when 'postgres'
+    opt(:database,
+        'database to dump, otherwise pg_dumpall is used',
+        type: String,
+        default: ENV['CRYO_DATABASE'])
   when 'list'
   when 'get'
   else
