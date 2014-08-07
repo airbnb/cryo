@@ -8,11 +8,11 @@ module Utils
   end
 
   def get_tempfile
-    #    Tempfile.new('redis-backup','/mnt/cryo').path
-    tmp_file = File.join(@tmp_path,"tmp-#{rand 9999}")
-    at_exit {delete_file tmp_file}
-    FileUtils.touch tmp_file
-    tmp_file
+    tmp_file = Tempfile.new('cryo', @tmp_path)
+    path = tmp_file.path
+    tmp_file.close
+    at_exit {delete_file path}
+    path
   end
 
   def gzip_file(path)
