@@ -35,7 +35,7 @@ module Utils
     #logger.debug "about to run #{command}"
     output = `bash -c "set -o pipefail && #{command}"`.chomp
     raise "command '#{command}' failed!\nOutput was:\n#{output}" unless $?.success?
-    true
+    output
   end
 
   def verify_system_dependency(command)
