@@ -22,6 +22,7 @@ module Utils
     tmp_file.close
     tmp_file.unlink
     FileUtils.mkdir_p(path)
+    at_exit {FileUtils.rm_rf path}
     path
   end
 
