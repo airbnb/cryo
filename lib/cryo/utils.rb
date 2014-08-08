@@ -15,6 +15,16 @@ module Utils
     path
   end
 
+  def get_tempdir
+    # ruby standard library doesn't wrap `mkdtemp`, so let's fake it
+    tmp_file = Tempfile.new('cryo', @tmp_path)
+    path = tmp_file.path
+    tmp_file.close
+    tmp_file.unlink
+    FileUtils.mkdir_p(path)
+    path
+  end
+
   def gzip_file(path)
     # given a path to a file, return a gzipped version of it
     tempfile = get_tempfile
