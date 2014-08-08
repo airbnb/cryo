@@ -93,6 +93,15 @@ END_OF_BANNER
         'database to dump, otherwise pg_dumpall is used',
         type: String,
         default: ENV['CRYO_DATABASE'])
+  when 'zookeeper'
+    opt(:remote_data_dir,
+        'path to zookeeper data dir',
+        type: String,
+        default: ENV['CRYO_REMOTE_DATA_DIR'])
+    opt(:remote_txlog_dir,
+        'path to zookeeper txlog dir',
+        type: String,
+        default: ENV['CRYO_REMOTE_TXLOG_DIR'])
   when 'list'
   when 'get'
   else

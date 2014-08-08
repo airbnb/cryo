@@ -8,11 +8,22 @@ module Utils
   end
 
   def get_tempfile
-    #    Tempfile.new('redis-backup','/mnt/cryo').path
-    tmp_file = File.join(@tmp_path,"tmp-#{rand 9999}")
-    at_exit {delete_file tmp_file}
-    FileUtils.touch tmp_file
-    tmp_file
+    tmp_file = Tempfile.new('cryo', @tmp_path)
+    path = tmp_file.path
+    tmp_file.close
+    at_exit {delete_file path}
+    path
+  end
+
+  def get_tempdir
+    # ruby standard library doesn't wrap `mkdtemp`, so let's fake it
+    tmp_file = Tempfile.new('cryo', @tmp_path)
+    path = tmp_file.path
+    tmp_file.close
+    tmp_file.unlink
+    FileUtils.mkdir_p(path)
+    at_exit {FileUtils.rm_rf path}
+    path
   end
 
   def gzip_file(path)
@@ -35,7 +46,7 @@ module Utils
     #logger.debug "about to run #{command}"
     output = `bash -c "set -o pipefail && #{command}"`.chomp
     raise "command '#{command}' failed!\nOutput was:\n#{output}" unless $?.success?
-    true
+    output
   end
 
   def verify_system_dependency(command)
