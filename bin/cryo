@@ -29,7 +29,7 @@ environment with the same name, capitalized, and with CRYO_ appended. Like: CRYO
 More docs and examples can be found at https://github.com/airbnb/cryo
 
 Usage:
-      cryo [redis,mysql,postgres] [options]
+      cryo [redis,mysql,postgres,filesystem,zookeeper] [options]
 
 where [options] are:
 
@@ -102,11 +102,16 @@ END_OF_BANNER
         'path to zookeeper txlog dir',
         type: String,
         default: ENV['CRYO_REMOTE_TXLOG_DIR'])
+  when 'filesystem'
+    opt(:tar_dir,
+      'path to the dir to tar zip',
+      type: String,
+      default: ENV['CRYO_TAR_DIR'])
   when 'list'
   when 'get'
   else
     unless mode == '--help'
-      STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql, list, get]'
+      STDERR.puts 'ERROR! bad input. first option needs to be one of [redis, postgres, mysql, zookeeper, filesystem, list, get]'
       STDERR.puts 'Please use --help for more info'
       exit 1
     end

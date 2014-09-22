@@ -9,6 +9,9 @@ require 'cryo/database'
 require 'cryo/database/mysql'
 require 'cryo/database/postgres'
 require 'cryo/database/redis'
+require 'cryo/database/filesystem'
+require 'cryo/database/zookeeper'
+
 
 require 'cryo/store'
 require 'cryo/store/s3'
