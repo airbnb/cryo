@@ -14,14 +14,45 @@ class Mysql < Database
     verify_system_dependency 'mysqldump'
   end
 
+  def cnf_path
+    "#{Dir.home}/#{host}.cnf"
+  end
+
+  def delete_cnf
+    File.delete(cnf_path)
+  end
+
+  def write_cnf
+    cnf = <<-EOF
+[client]
+password=#{password}
+EOF
+    File.open(cnf_path, 'w') { |f| f.write(cnf) }
+    File.chmod(600, cnf_path)
+  end
+
   ## run through all of the necessary steps to perform a backup
   def get_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction > #{local_path}"
+    write_cnf
+    begin
+      safe_run "mysqldump --defaults-file=#{cnf_path} --host=#{host} --user=#{user} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction > #{local_path}"
+    rescue => e
+      delete_cnf
+      throw e
+    end
+    delete_cnf
     local_path
   end
 
   def get_gzipped_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction | gzip > #{local_path}"
+    write_cnf
+    begin
+      safe_run "mysqldump --defaults-file=#{cnf_path} --host=#{host} --user=#{user} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction | gzip > #{local_path}"
+    rescue => e
+      delete_cnf
+      throw e
+    end
+    delete_cnf
     local_path
   end
 end
