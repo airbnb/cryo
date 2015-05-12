@@ -1,5 +1,7 @@
 # this has all of the logic to perform an entire dump of a remote rds host
 
+require 'tempfile'
+
 class Mysql < Database
   include Utils
   attr_accessor :user, :host, :password, :local_path, :tmp_path, :port
@@ -14,45 +16,29 @@ class Mysql < Database
     verify_system_dependency 'mysqldump'
   end
 
-  def cnf_path
-    "#{Dir.home}/#{host}.cnf"
-  end
-
-  def delete_cnf
-    File.delete(cnf_path)
-  end
-
-  def write_cnf
-    cnf = <<-EOF
-[client]
-password=#{password}
-EOF
-    File.open(cnf_path, 'w') { |f| f.write(cnf) }
-    File.chmod(600, cnf_path)
-  end
-
   ## run through all of the necessary steps to perform a backup
-  def get_backup
-    write_cnf
+  def get_backup(to_gzip = false)
+    gzip_str = to_gzip ? '| gzip' : ''
     begin
-      safe_run "mysqldump --defaults-file=#{cnf_path} --host=#{host} --user=#{user} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction > #{local_path}"
-    rescue => e
-      delete_cnf
-      throw e
+      f = Tempfile.new(host, '/tmp')
+      f.write("[client]\npassword=#{password}")
+      f.close
+      safe_run "mysqldump " \
+          "--defaults-file=#{f.path} " \
+          "--host=#{host} " \
+          "--user=#{user} " \
+          "--all-databases " \
+          "--ignore-table=mysql.slow_log_backup " \
+          "--ignore-table=mysql.slow_log " \
+          "--single-transaction " \
+          "#{gzip_str} > #{local_path}"
+    ensure
+      f.unlink
     end
-    delete_cnf
     local_path
   end
 
   def get_gzipped_backup
-    write_cnf
-    begin
-      safe_run "mysqldump --defaults-file=#{cnf_path} --host=#{host} --user=#{user} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction | gzip > #{local_path}"
-    rescue => e
-      delete_cnf
-      throw e
-    end
-    delete_cnf
-    local_path
+    get_backup(true)
   end
 end
