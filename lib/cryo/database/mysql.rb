@@ -1,5 +1,7 @@
 # this has all of the logic to perform an entire dump of a remote rds host
 
+require 'tempfile'
+
 class Mysql < Database
   include Utils
   attr_accessor :user, :host, :password, :local_path, :tmp_path, :port
@@ -15,13 +17,28 @@ class Mysql < Database
   end
 
   ## run through all of the necessary steps to perform a backup
-  def get_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction > #{local_path}"
+  def get_backup(to_gzip = false)
+    gzip_str = to_gzip ? '| gzip' : ''
+    begin
+      f = Tempfile.new(host, '/tmp')
+      f.write("[client]\npassword=#{password}")
+      f.close
+      safe_run "mysqldump " \
+          "--defaults-file=#{f.path} " \
+          "--host=#{host} " \
+          "--user=#{user} " \
+          "--all-databases " \
+          "--ignore-table=mysql.slow_log_backup " \
+          "--ignore-table=mysql.slow_log " \
+          "--single-transaction " \
+          "#{gzip_str} > #{local_path}"
+    ensure
+      f.unlink
+    end
     local_path
   end
 
   def get_gzipped_backup
-    safe_run "mysqldump --host=#{host} --user=#{user} --password=#{password} --all-databases --ignore-table=mysql.slow_log_backup --ignore-table=mysql.slow_log --single-transaction | gzip > #{local_path}"
-    local_path
+    get_backup(true)
   end
 end
