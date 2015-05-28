@@ -15,7 +15,12 @@ class S3 < Store
     bucket  = opts[:bucket]
     key     = opts[:key]
     content = opts[:content]
-    @s3.buckets[bucket].objects[key].write(content) # TODO: verify that bucket exists?
+    # When using S3 cross-region replication across accounts
+    # (https://docs.aws.amazon.com/AmazonS3/latest/dev/crr-how-setup.html)
+    # it may be necessary to grant the destination account the
+    # ACL read permissions for each object to provide read access
+    options = { :grant_read => ENV['S3_ACL_GRANT_READ_GRANTEE'] }
+    @s3.buckets[bucket].objects[key].write(content, options)
   end
 
   # return an array listing the objects in our snapshot bucket
