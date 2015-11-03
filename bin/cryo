@@ -50,6 +50,11 @@ END_OF_BANNER
       type: String,
       default: ENV['CRYO_SNAPSHOT_PREFIX'])
 
+  opt(:snapshot_key,
+      's3 object key to use for snapshots. Defaults to UTC start time',
+      type: String,
+      default: ENV['CRYO_SNAPSHOT_KEY'])
+
   opt(:aws_access_key,
       'aws_access_key. Can be set using the AWS_ACCESS_KEY environment variable',
       type: String,

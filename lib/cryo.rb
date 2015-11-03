@@ -31,11 +31,10 @@ class Cryo
       unless options[:type] == 'list' or options[:type] == 'get'
     @store              = Store.create(options.merge(type: 's3', time: @start_time))
     @snapshot_prefix    = options[:snapshot_prefix]
+    @snapshot_key       = options[:snapshot_key].nil? ? @start_time.strftime('%Y/%m/%d/%H:%M:%S') : options[:snapshot_key]
     @tmp_path           = options[:tmp_path]
     @report_path        = options[:report_path]
-    @key                = "#{@snapshot_prefix}#{@start_timestamp}Z.cryo"
-    @start_time         = Time.now.utc
-    @start_timestamp    = @start_time.strftime('%Y/%m/%d/%H:%M:%S')
+    @key                = "#{@snapshot_prefix}#{@snapshot_key}Z.cryo"
 
     @uncompressed_time, @backed_up_time, @stored_time = nil
     @uncompressed_size, @compressed_size = nil
