@@ -5,8 +5,11 @@ class S3 < Store
 
   def initialize(opts={})
     super(opts)
-    AWS.config(:access_key_id => opts[:aws_access_key],
-               :secret_access_key => opts[:aws_secret_key])
+    # Set access key only if provided, otherwise default to IAM role
+    if(opts[:aws_access_key] && opts[:aws_secret_key])
+      AWS.config(:access_key_id => opts[:aws_access_key],
+                 :secret_access_key => opts[:aws_secret_key])
+    end
     @s3 = AWS::S3.new
     @snapshot_bucket = @s3.buckets[opts[:snapshot_bucket]]
   end

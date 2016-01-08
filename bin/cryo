@@ -3,9 +3,7 @@
 require 'cryo'
 require 'trollop'
 
-required_parameters = %w(aws_access_key
-                         aws_secret_key
-                         host
+required_parameters = %w(host
                          password
                          snapshot_bucket
                          snapshot_prefix
